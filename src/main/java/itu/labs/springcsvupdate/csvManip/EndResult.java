@@ -1,10 +1,16 @@
 package itu.labs.springcsvupdate.csvManip;
 
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+import java.util.Map;
+
+@Getter
+@Setter
 public class EndResult {
-    List<String> before;
-    List<String> after;
-    List<String> affectedRows;
-    List<String> newRows;
+    List<Map<String,String>> before;
+    List<Map<String,String>> after;
+    List<Map<String,Object>> affectedRows;
+    List<Map<String,Object>> newRows;
 }

@@ -2,6 +2,7 @@ package itu.labs.springcsvupdate.csvManip.experimental;
 
 import itu.labs.springcsvupdate.apiresponse.ApiResponse;
 import itu.labs.springcsvupdate.checking.TableFetcherService;
+import itu.labs.springcsvupdate.csvManip.EndResult;
 import itu.labs.springcsvupdate.csvManip.csvdataloader.CSVLoadingInterface;
 import itu.labs.springcsvupdate.csvManip.csvdataloader.CSVLoadingService;
 import itu.labs.springcsvupdate.csvManip.headerExtraction.CSVHeaderExtractor;
@@ -87,8 +88,8 @@ public class CSVLoaderController {
             @RequestPart("csvRequest") CSVTableDTO csvRequest){
         csvRequest.setCsvFilePath(file.getOriginalFilename());
         try {
-            persistenceExecutor.persist(csvRequest);
-            return ResponseEntity.ok("Success");
+            EndResult endResult = persistenceExecutor.persist(csvRequest);
+            return ResponseEntity.ok(endResult);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing CSV file");
