@@ -54,29 +54,44 @@ public class PersistenceExecutor {
         CsvTableDetails csvTableDetails = loadDetails(csvTableDTO);
         EndResult endResult = new EndResult();
         
-        List<String> before = new ArrayList<>();
-        List<String> after = new ArrayList<>();
-        List<String> modified = new ArrayList<>();
-        List<String> newRows = new ArrayList<>();
+        List<Map<String,String>> before = fillBeforeOrAfter(csvTableDTO);
+        List<Map<String,Object>> modified = new ArrayList<>();
+        List<Map<String,Object>> newRows = new ArrayList<>();
 
         CSVElements csvElements = csvTableDetails.getCsvElements();
         TableCSVMapping tableCSVMapping = csvTableDetails.getTableCSVMapping();
         String query;
         for (DataRow dataRow : csvElements.getDataRows()) {
+            Map<String,Object> arg = convertDataRow(dataRow,tableCSVMapping.getTable());
             if (tableCSVMapping.getTableVariables().containsKey(dataRow.getRow().get(csvTableDTO.getPrimaryKey()))) {
                 query = tableCSVMapping.provideUpdateQuery();
+                modified.add(arg);
             } else {
                 query = tableCSVMapping.provideInsertQuery();
+                newRows.add(arg);
             }
-            Map<String,Object> arg = convertDataRow(dataRow,tableCSVMapping.getTable());
             namedParameterJdbcTemplate.update(query,arg);
         }
-        return null;
+        List<Map<String,String>> after = fillBeforeOrAfter(csvTableDTO);
+        endResult.setBefore(before);
+        endResult.setAfter(after);
+        endResult.setAffectedRows(modified);
+        endResult.setNewRows(newRows);
+        return endResult;
     }
+    private List<Map<String,String>> fillBeforeOrAfter(CSVTableDTO csvTableDTO) throws Exception {
+        HashMap<String, Map<String,String>> rows = tableFetcherService.fetchTable(csvTableDTO.getTableName(),csvTableDTO.getPrimaryKey(),jdbcTemplate);
+        List<Map<String,String>> before = new ArrayList<>();
+        for (Map.Entry<String, Map<String, String>> el : rows.entrySet()) {
+            before.add(el.getValue());
+        }
+        return before;
+    }
+
+
     private Map<String, Object> convertDataRow(DataRow dataRow,MTable mTable){
         Map<String, Object> paramMap = new HashMap<>();
         for (Map.Entry<String,String> element : dataRow.getRow().entrySet()){
-//            System.out.println(element.getKey() + " " + element.getValue());
             Object temp = typeConverter.convertStringToType(element.getValue(),mTable.getVariables().get(element.getKey()).getDatabaseType());
             paramMap.put(element.getKey(),temp);
         }
