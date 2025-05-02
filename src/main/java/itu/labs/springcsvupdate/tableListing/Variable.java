@@ -3,6 +3,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@ToString
 public class Variable {
     private String databaseType;
     private String keyType;

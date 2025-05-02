@@ -6,6 +6,8 @@ import itu.labs.springcsvupdate.csvManip.csvdataloader.CSVLoadingInterface;
 import itu.labs.springcsvupdate.csvManip.csvdataloader.CSVLoadingService;
 import itu.labs.springcsvupdate.csvManip.headerExtraction.CSVHeaderExtractor;
 import itu.labs.springcsvupdate.csvManip.headerExtraction.CSVHeaderExtractorService;
+import itu.labs.springcsvupdate.csvManip.tableMapping.PersistenceExecutor;
+import itu.labs.springcsvupdate.csvManip.tableMapping.dto.CSVTableDTO;
 import itu.labs.springcsvupdate.csvProps.CSVElements;
 import itu.labs.springcsvupdate.tableListing.TableMappingService;
 import lombok.Getter;
@@ -23,7 +25,8 @@ import java.util.*;
 
 @RestController
 public class CSVLoaderController {
-
+    @Autowired
+    PersistenceExecutor persistenceExecutor;
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Autowired
@@ -76,7 +79,20 @@ public class CSVLoaderController {
     }
     @GetMapping(value = "/api/v1/experiment/table-metadata")
     public ResponseEntity<?> metaData() throws Exception{
-        return ResponseEntity.ok(tableMappingService.provideTablesMetadata());
+        return ResponseEntity.ok(tableMappingService.provideTablesMetadata(jdbcTemplate));
+    }
+    @PostMapping(value = "/api/v1/experiment/persistence", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> persist(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("csvRequest") CSVTableDTO csvRequest){
+        csvRequest.setCsvFilePath(file.getOriginalFilename());
+        try {
+            persistenceExecutor.persist(csvRequest);
+            return ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing CSV file");
+        }
     }
 }
 
@@ -84,6 +100,7 @@ public class CSVLoaderController {
 @Setter
 class CSVRequest {
     String csvFilePath;
+    String tableName;
     HashMap<String, String> equivalents;
     String primaryKey;
 }

@@ -27,7 +27,7 @@ public class TableCSVMapping {
                 continue;
             }
             columnsPart.append(variable.getVariableName()).append(", ");
-            valuesPart.append("?").append(", ");
+            valuesPart.append(":").append(variable.getVariableName()).append(", ");
         }
         if (columnsPart.length() > 0) {
             columnsPart.setLength(columnsPart.length() - 2);
