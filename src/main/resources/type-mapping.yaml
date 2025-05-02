@@ -1,42 +1,89 @@
-{
-  "java":
-    {
-      "int2": "Integer",
-      "smallint": "Integer",
-      "integer": "Integer",
-      "int": "Integer",
-      "int4": "Integer",
-      "int8": "Long",
-      "bigint": "Long",
-      "serial": "Long",
-      "bigserial": "Long",
-      "character varying": "String",
-      "text": "String",
-      "varchar": "String",
-      "real": "Double",
-      "double": "Double",
-      "float4": "Double",
-      "float8": "Double",
-      "double precision": "Double",
-      "decimal": "Double",
-      "numeric": "Double",
-      "date": "java.time.LocalDate",
-      "timestamp without time zone": "java.time.LocalDateTime",
-      "timestamp": "java.time.LocalDateTime",
-      "bool": "Boolean",
-      "time": "java.time.LocalTime",
-      "tsrange": "String",
-      "json": "String",
-      "jsonb": "String",
-      "interval": "java.time.Duration",
-      "uuid": "String",
-      "_int4": "Integer[]",
-      "_text": "String[]",
-      "bytea": "byte[]",
-      "inet": "java.net.InetAddress",
-      "cidr": "java.net.InetAddress",
-      "macaddr": "String",
-      "xml": "String",
-      "blob": "byte[]"
-    },
-}
+# Database type to Java type conversion mappings
+conversions:
+    # String types
+    VARCHAR:
+        javaType: java.lang.String
+        converter: toString
+    CHAR:
+        javaType: java.lang.String
+        converter: toString
+    TEXT:
+        javaType: java.lang.String
+        converter: toString
+    LONGTEXT:
+        javaType: java.lang.String
+        converter: toString
+    MEDIUMTEXT:
+        javaType: java.lang.String
+        converter: toString
+    TINYTEXT:
+        javaType: java.lang.String
+        converter: toString
+    
+    # Integer types
+    INTEGER:
+        javaType: java.lang.Integer
+        converter: toInteger
+    INT:
+        javaType: java.lang.Integer
+        converter: toInteger
+    SMALLINT:
+        javaType: java.lang.Integer
+        converter: toInteger
+    TINYINT:
+        javaType: java.lang.Integer
+        converter: toInteger
+    MEDIUMINT:
+        javaType: java.lang.Integer
+        converter: toInteger
+    BIGINT:
+        javaType: java.lang.Long
+        converter: toLong
+    
+    # Decimal types
+    DECIMAL:
+        javaType: java.math.BigDecimal
+        converter: toBigDecimal
+    NUMERIC:
+        javaType: java.math.BigDecimal
+        converter: toBigDecimal
+    FLOAT:
+        javaType: java.lang.Float
+        converter: toFloat
+    DOUBLE:
+        javaType: java.lang.Double
+        converter: toDouble
+    
+    # Boolean types
+    BOOLEAN:
+        javaType: java.lang.Boolean
+        converter: toBoolean
+    BIT:
+        javaType: java.lang.Boolean
+        converter: toBoolean
+    
+    # Date/Time types
+    DATE:
+        javaType: java.sql.Date
+        converter: toDate
+        formats:
+            - yyyy-MM-dd
+            - dd/MM/yyyy
+            - MM/dd/yyyy
+    TIME:
+        javaType: java.sql.Time
+        converter: toTime
+        formats:
+            - HH:mm:ss
+    TIMESTAMP:
+        javaType: java.sql.Timestamp
+        converter: toTimestamp
+        formats:
+            - yyyy-MM-dd HH:mm:ss
+            - dd/MM/yyyy HH:mm:ss
+    DATETIME:
+        javaType: java.sql.Timestamp
+        converter: toTimestamp
+        formats:
+            - yyyy-MM-dd HH:mm:ss
+            - dd/MM/yyyy HH:mm:ss

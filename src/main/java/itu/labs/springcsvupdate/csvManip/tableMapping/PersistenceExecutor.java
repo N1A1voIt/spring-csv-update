@@ -5,6 +5,7 @@ import itu.labs.springcsvupdate.csvManip.EndResult;
 import itu.labs.springcsvupdate.csvManip.csvdataloader.CSVLoadingService;
 import itu.labs.springcsvupdate.csvManip.headerExtraction.CSVHeaderExtractorService;
 import itu.labs.springcsvupdate.csvManip.tableMapping.dto.CSVTableDTO;
+import itu.labs.springcsvupdate.csvManip.tableMapping.typer.TypeConverter;
 import itu.labs.springcsvupdate.csvProps.CSVElements;
 import itu.labs.springcsvupdate.dataprops.DataRow;
 import itu.labs.springcsvupdate.tableListing.MTable;
@@ -28,6 +29,8 @@ public class PersistenceExecutor {
     CSVLoadingService csvLoadingService;
     @Autowired
     TableMappingService tableMappingService;
+    @Autowired
+    private TypeConverter typeConverter;
 
     private CsvTableDetails loadDetails(CSVTableDTO csvTableDTO) throws Exception {
         CsvTableDetails csvTableDetails = new CsvTableDetails();
