@@ -1,0 +1,67 @@
+type: collection.insomnia.rest/5.0
+name: itu labs CSV
+meta:
+  id: wrk_a3a6bcb2ffca4e998ed067ee10ecd96c
+  created: 1746128692113
+  modified: 1746128692113
+collection:
+  - url: localhost:8080/api/v2/csv/persistence
+    name: Persistence
+    meta:
+      id: req_96f56c7688744ca3a76ed4ef64de015c
+      created: 1746210015377
+      modified: 1746214882049
+      isPrivate: false
+      sortKey: -1746210015377
+    method: POST
+    body:
+      mimeType: multipart/form-data
+      params:
+        - id: pair_22bcc44cebf14972ae94f6deaf8b3772
+          name: file
+          disabled: false
+          type: file
+          fileName: /home/nyavo/Documents/labs/spring-csv-update/master.csv
+        - id: pair_38148d1add56440c864baac02363e65a
+          name: csvRequest
+          value: |-
+            {  
+            		"tableName":"master_table",
+            		"csvFilePath": "path/to/your/file.csv",
+            			"equivalents": {
+            			"etu": "etu",
+            			"file_x": "file_x",
+            			"file_y": "file_y",
+            			"Decision": "decision"  
+            		},  
+            		"primaryKey": "etu"
+            }
+          disabled: false
+          type: text
+          multiline: application/json
+    headers:
+      - name: Content-Type
+        value: multipart/form-data
+      - name: User-Agent
+        value: insomnia/11.0.2
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_3c95663feccdf2efc8670b3e8f70fb8a4320da58
+    created: 1746128692116
+    modified: 1746128692116
+environments:
+  name: Base Environment
+  meta:
+    id: env_3c95663feccdf2efc8670b3e8f70fb8a4320da58
+    created: 1746128692115
+    modified: 1746128692115
+    isPrivate: false
